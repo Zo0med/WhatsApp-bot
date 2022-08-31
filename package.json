@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "node main.js",
-    "build": "tsc && npm install && npm run start"
+    "build": "npm install && tsc &&  npm run start"
   },
   "keywords": [],
   "author": "",
