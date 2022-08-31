@@ -19,12 +19,12 @@ const scrape = async (a:string, ab: string, abc: string) => {
         await page.goto("https://web.whatsapp.com/");
 
         // Watch for side panel 
-        await page.waitForSelector("#pane-side", {timeout: 60000});
+        await page.waitForSelector("#pane-side", {timeout: 0});
         await delay(1000);
 
-        //Change to contact you want to send messages to
+        //Change contact you want to send messages to
         await page.click(`span[title='${abc}']`);
-        await page.waitForSelector(".p3_M1");
+        await page.waitForSelector(".p3_M1", { timeout: 0 });
 
         //Finds the message bar and focuses on it
         const editor = await page.$("div[data-tab='10']");
