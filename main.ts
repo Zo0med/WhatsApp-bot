@@ -1,5 +1,6 @@
 import readline from 'readline';
 import puppeteer, { ElementHandle } from 'puppeteer';
+
 const scrape = async (a:string, ab: string, abc: string) => {
     try {
         const browser = await puppeteer.launch({ headless: false });
