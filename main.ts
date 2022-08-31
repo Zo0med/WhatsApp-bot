@@ -4,17 +4,21 @@ const scrape = async (a:string, ab: string, abc: string) => {
     try {
         const browser = await puppeteer.launch({ headless: false });
         const page = await browser.newPage();
-        // Configures puppeteer
+
+        // UserAgent Setup
         await page.setUserAgent(
             "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36"
         );
+
+        // Set message in localStorage for later use 
         await page.evaluateOnNewDocument((a) => {
             localStorage.setItem("msg", a);
         }, a)
 
+        // Navigate to whatsapp
         await page.goto("https://web.whatsapp.com/");
 
-        //Searches person by title
+        // Watch for side panel 
         await page.waitForSelector("#pane-side", {timeout: 60000});
         await delay(1000);
 
@@ -37,11 +41,14 @@ const scrape = async (a:string, ab: string, abc: string) => {
         console.error("error mine", e);
     }
 };
-function delay(time: number) {
+
+const delay = (time: number) => {
     return new Promise(function (resolve) {
         setTimeout(resolve, time);
     });
 }
+
+// Command line utilities 
 const prc = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
