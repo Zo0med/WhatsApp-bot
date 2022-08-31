@@ -1,32 +1,56 @@
-import readline from 'readline'
-import puppeteer from 'puppeteer'
+import readline from 'readline';
+import puppeteer, { ElementHandle } from 'puppeteer';
+const scrape = async (a:string, ab: string, abc: string) => {
+    try {
+        const browser = await puppeteer.launch({ headless: false });
+        const page = await browser.newPage();
+        // Configures puppeteer
+        await page.setUserAgent(
+            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36"
+        );
+        await page.evaluateOnNewDocument((a) => {
+            localStorage.setItem("msg", a);
+        }, a)
 
-const scrape = async (a:string, ab:string, abc:string) => {
-    const browser = await puppeteer.launch({headless: false});
-    const page = await browser.newPage();
-    await page.goto("https://web.whatsapp.com/");
-    await page.waitForSelector(`span [title="${abc}"]`,{timeout: 0});
-    const target = await page.$(`span [title="${abc}"]`);
-    await target?.click();
-    const inp = await page.$(
-        "#main > footer > div._2BU3P.tm2tP.copyable-area > div > span:nth-child(2) > div > div._2lMWa > div.p3_M1 > div > div.fd365im1.to2l77zo.bbv8nyr4.mwp4sxku.gfz4du6o.ag5g9lrv"
-    );
-    for(let i = 0; i < parseInt(ab); i++){
-        await inp?.type(a)
-        await page.keyboard.press("Enter")
+        await page.goto("https://web.whatsapp.com/");
+
+        //Searches person by title
+        await page.waitForSelector("#pane-side", {timeout: 60000});
+        await delay(1000);
+
+        //Change to contact you want to send messages to
+        await page.click(`span[title='${abc}']`);
+        await page.waitForSelector(".p3_M1");
+
+        //Finds the message bar and focuses on it
+        const editor = await page.$("div[data-tab='10']");
+        await editor?.focus();
+        for (var i = 0; i < parseInt(ab); i++) {
+            await page.evaluate(() => {
+                const message:any = localStorage.getItem("msg");
+                document.execCommand("insertText", false, message);
+            });
+            await page.click("span[data-testid='send']");
+            await delay(500);
+        }
+    } catch (e) {
+        console.error("error mine", e);
     }
+};
+function delay(time: number) {
+    return new Promise(function (resolve) {
+        setTimeout(resolve, time);
+    });
 }
-
 const prc = readline.createInterface({
     input: process.stdin,
-    output: process.stdout
+    output: process.stdout,
 });
 
 prc.question("Enter message: ", (msg) => {
     prc.question("Enter reps: ", (reps) => {
         prc.question("Enter contact: ", (p) => {
-            console.log(msg,reps,p)
-            scrape(msg, reps, p)
-        }) 
-    })
+            scrape(msg, reps, p);
+        });
+    });
 });
