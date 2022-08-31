@@ -1,2 +1,7 @@
 # Whatsapp-bot
-A simple web-scraper that uses puppeteer chromium and redline for taking data for automating messages 
+This Program sends automatically messages to another person in whatsapp
+
+## Setup
+--Clone the repository 
+--run ### `npm run build`
+--Done!
